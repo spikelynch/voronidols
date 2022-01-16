@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-import random, subprocess, argparse, itertools
+import random, subprocess, argparse, itertools, re
 
 COLOURFILE = './rgb.txt'
 XMAX = 512
@@ -136,6 +136,16 @@ blur: blur resultant image
         return output
 
 
+def make_multifile(basename, n):
+    parts = basename.split('.')
+    if len(parts) > 1:
+        ext = parts[-1]
+        fn = '.'.join(parts[:-1])
+        return f'{fn}.{n:04d}.{ext}'
+    else:
+        return f'{basename}.{n:04d}'
+
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Generate a voronoi map')
     parser.add_argument('-x', '--width', type=int, default=XMAX, help="canvas width")
@@ -149,6 +159,7 @@ if __name__ == "__main__":
     parser.add_argument('-s', '--symmetry', type=str, default="vertical", help="symmetry (vertical, horizontal, both, rot2, rot4, none)")
     parser.add_argument('-g', '--gradient', type=str, default=None, help='overlay gradient')
     parser.add_argument('-l', '--list', type=str, default=None, help="comma-separated list of colours")
+    parser.add_argument('-m', '--many', type=int, default=None, help="generate many frames")
     parser.add_argument('output', type=str, help='output file')
     
     args = parser.parse_args()
@@ -168,5 +179,10 @@ if __name__ == "__main__":
     if args.blgorithm:
         kw['blg'] = args.blgorithm
     
-    voronidol(args.width, args.height, args.points, args.symmetry, args.colours, colours, args.output, **kw)
+    if args.many:
+        for i in range(args.many):
+            out = make_multifile(args.output, i)
+            voronidol(args.width, args.height, args.points, args.symmetry, args.colours, colours, out, **kw)
+    else:
+        voronidol(args.width, args.height, args.points, args.symmetry, args.colours, colours, args.output, **kw)
     
