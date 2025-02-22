@@ -1,8 +1,6 @@
-#!/usr/bin/env python3.5
-
 import random, os.path, uuid
 
-from botclient import Bot
+from botclient.botclient import Bot
 from voronidols import mkcolours, voronidol
 from iconoci import iconoci
 
