@@ -29,10 +29,12 @@ if __name__ == '__main__':
     if vorofile:
         bot.wait()
         options = {}
-        if 'content_warning' in bot.cf:
-            options['spoiler_text'] = bot.cf['content_warning'].format(text)
+        if "content_warning" in bot.cf:
+            options["spoiler_text"] = bot.cf["content_warning"].format(text)
         if "description" in bot.cf:
-            options['description'] = bot.cf['description'].format(text)
+            options["description"] = bot.cf["description"].format(text)
+        if "mime_type" in bot.cf:
+            options["mime_type"] = bot.cf["mime_type"]
         if options: 
             options["sensitive"] = True
         bot.post_image(vorofile, text, options)
